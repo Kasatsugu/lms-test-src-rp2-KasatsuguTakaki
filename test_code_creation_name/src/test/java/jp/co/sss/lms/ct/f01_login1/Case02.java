@@ -52,8 +52,6 @@ public class Case02 {
 	@Order(2)
 	@DisplayName("テスト02 DBに登録されていないユーザーでログイン")
 	void test02() {
-		// ログインページを表示
-		goTo("http://localhost:8080/lms");
 
 		// ログインIDを入力
 		webDriver.findElement(By.id("loginId")).sendKeys("NotUser111");
