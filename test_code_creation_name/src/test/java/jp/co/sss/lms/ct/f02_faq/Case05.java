@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 
-
 /**
  * 結合テスト よくある質問機能
  * ケース05
@@ -38,41 +37,120 @@ public class Case05 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
+		//ログインページを表示
+		goTo("http://localhost:8080/lms");
+
+		//タイトルが正しいか検証
+		assertEquals("ログイン | LMS", webDriver.getTitle());
+
+		//エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
-		// TODO ここに追加
+		// ログインIDを入力
+		webDriver.findElement(By.id("loginId")).sendKeys("StudentAA02");
+
+		// パスワードを入力
+		webDriver.findElement(By.id("password")).sendKeys("Asdfg12345");
+
+		// ログインボタンを押下
+		webDriver.findElement(By.cssSelector("input[type='submit'][value='ログイン']")).click();
+
+		//タイトルが正しいか検証
+		assertEquals("コース詳細 | LMS", webDriver.getTitle());
+
+		// スクリーンショットを撮影
+		getEvidence(new Object() {
+		});
 	}
-	
+
 	@Test
 	@Order(3)
 	@DisplayName("テスト03 上部メニューの「ヘルプ」リンクからヘルプ画面に遷移")
 	void test03() {
-		// TODO ここに追加
+		// 「機能」をクリック
+		webDriver.findElement(By.linkText("機能")).click();
+
+		// 「ヘルプ」リンクをクリック
+		webDriver.findElement(By.linkText("ヘルプ")).click();
+
+		// タイトルが正しいか検証
+		assertEquals("ヘルプ | LMS", webDriver.getTitle());
+
+		// エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 
 	@Test
 	@Order(4)
 	@DisplayName("テスト04 「よくある質問」リンクからよくある質問画面を別タブに開く")
 	void test04() {
-		// TODO ここに追加
+		// 現在のタブを取得
+		String originalWindow = webDriver.getWindowHandle();
+
+		// 「よくある質問」リンクをクリック
+		webDriver.findElement(By.linkText("よくある質問")).click();
+
+		// 新しいタブに切り替え
+		for (String windowHandle : webDriver.getWindowHandles()) {
+			if (!windowHandle.equals(originalWindow)) {
+				webDriver.switchTo().window(windowHandle);
+				break;
+			}
+		}
+
+		// タイトルが正しいか検証
+		assertEquals("よくある質問 | LMS", webDriver.getTitle());
+
+		// エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
+
 	@Test
 	@Order(5)
 	@DisplayName("テスト05 キーワード検索で該当キーワードを含む検索結果だけ表示")
 	void test05() {
-		// TODO ここに追加
+		// キーワードを入力
+		webDriver.findElement(By.name("keyword")).sendKeys("キャンセル");
+
+		// 検索ボタンを押下
+		webDriver.findElement(By.cssSelector("input[type='submit'][value='検索']")).click();
+
+		// 検索結果が表示されていることを検証
+		assertTrue(webDriver.findElement(By.id("question-h[${status.index}]")).isDisplayed());
+
+		// 検索結果が1件であることを検証
+		assertEquals(1, webDriver.findElements(By.id("question-h[${status.index}]")).size());
+
+		// 検索結果にキーワード「キャンセル」が含まれていることを検証
+		assertTrue(webDriver.findElement(By.cssSelector("tbody tr dt span:nth-child(2)")).getText()
+				.contains("キャンセル"));
+
+		// エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
-	
+
 	@Test
 	@Order(6)
 	@DisplayName("テスト06 「クリア」ボタン押下で入力したキーワードを消去")
 	void test06() {
-		// TODO ここに追加
+		// キーワード検索のクリアボタンを押下
+		webDriver.findElement(By.cssSelector("input[type='button'][value='クリア']")).click();
+
+		// テキストボックスが空か確認
+		assertEquals("", webDriver.findElement(By.name("keyword")).getAttribute("value"));
+
+		// エビデンス取得
+		getEvidence(new Object() {
+		});
 	}
 
 }
